@@ -8,8 +8,10 @@
 **HackNation 2025** — 06–07.12.2025, Bydgoskie Centrum Targowo-Wystawiennicze (ul. Gdańska 187, Bydgoszcz).
 
 **Symulator:** https://niesmiertelnik.replit.app
+
 **Dokumentacja** https://niesmiertelnikcyfrowy-admin810.replit.app
 
+**Strona Wydarzenia** https://hacknation.pl
 
 Materiały formalne i zgody: `FORMALNO_PRAWNE_HACKNATION.md`
 
