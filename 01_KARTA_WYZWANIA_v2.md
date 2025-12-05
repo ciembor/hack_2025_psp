@@ -104,6 +104,8 @@ Wyzwanie obejmuje **6 typów urządzeń** tworzących kompletny system:
 
 ## 🎯 CEL WYZWANIA
 
+Głównym celem jest zaprojektowanie rozwiązania do **lokalizacji strażaków wraz z „czarną skrzynką”**, które pozwala odtworzyć przebieg akcji i położenie ratowników **niezależnie od warunków zewnętrznych** – także tam, gdzie brak jest dostępu do GPS, GSM czy innych systemów (np. akcje prowadzone pod ziemią, w tunelach, obiektach przemysłowych). Zespół może potraktować udostępniony symulator jako bazę do stworzenia rozwiązania demonstracyjnego (symulatora) albo zaproponować **kompleksową koncepcję systemu lokalizacji osoby (strażaka)** od zera. Elementy udostępnione w projekcie są formą zobrazowania problemu i prostego przykładowego rozwiązania – pełna, docelowa architektura może zostać zaprojektowana przez zespół w sposób twórczy.
+
 Zaprojektuj **kompletny system** składający się z:
 
 ### A. APLIKACJA DOWÓDCY (oprogramowanie)
