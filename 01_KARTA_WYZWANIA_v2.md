@@ -123,14 +123,6 @@ Fuzja danych z wielu źródeł:
 - Barometr (wysokość → piętro)
 - GNSS (pozycja outdoor)
 
-### C. KONCEPCJA HARDWARE (dokumentacja)
-Dla każdego z 6 urządzeń:
-- Schemat blokowy
-- Lista komponentów (BOM) z cenami
-- Uzasadnienie wyboru
-- Analiza poboru energii
-- Wymiary i obudowa
-
 ---
 
 ## 👥 ODBIORCY ROZWIĄZANIA
