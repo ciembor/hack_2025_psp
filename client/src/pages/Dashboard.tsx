@@ -30,8 +30,9 @@ export default function Dashboard() {
           ))}
         </div>
 
-        <div className="flex-1 w-full" style={{ height: "100vh" }}>
+        <div style={{ height: "600px", width: "600px" }}>
           <MapView
+            building={building}
             firefighters={firefighters}
             beacons={beacons}
             floor={floor}
