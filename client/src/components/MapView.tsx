@@ -14,8 +14,9 @@ L.Icon.Default.mergeOptions({
 });
 
 export function MapView({ building, firefighters, beacons, floor }) {
-  if (!building) return null;
-
+  if (!building) {
+    return <div style={{ color: "white" }}>Loading...</div>;
+  }
   const width = building.dimensions.width_m;   // 40
   const height = building.dimensions.depth_m;  // 25
 
