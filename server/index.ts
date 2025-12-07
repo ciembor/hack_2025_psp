@@ -18,9 +18,10 @@ app.use("/", router)
 
 const server = http.createServer(app)
 
-// JEDEN JEDYNY WebSocket serwer
+// ----------------------------
+// JEDEN WebSocket dla FRONTENDU
+// ----------------------------
 const wss = new WebSocketServer({ server, path: "/ws" })
-
 const clients = new Set<WebSocket>()
 
 wss.on("connection", ws => {
@@ -29,7 +30,6 @@ wss.on("connection", ws => {
   ws.on("close", () => clients.delete(ws))
 })
 
-// forward broadcast
 function broadcast(data: any) {
   const json = JSON.stringify(data)
   for (const c of clients) {
@@ -37,18 +37,24 @@ function broadcast(data: any) {
   }
 }
 
-// WebSocket to simulator
+// ----------------------------
+// WebSocket → SIMULATOR
+// ----------------------------
 const simulatorWS = new WebSocket("wss://niesmiertelnik.replit.app/ws")
 
 simulatorWS.on("open", () => console.log("✓ Simulator WS connected"))
 
-simulatorWS.on("message", (raw: WebSocket.RawData) => {
+simulatorWS.on("message", raw => {
   try {
     const msg = JSON.parse(raw.toString())
 
-    // always forward EVERYTHING
+    // DEBUG
+    // console.log("SIM MSG:", msg)
+
+    // forward do frontend
     broadcast(msg)
 
+    // MAN DOWN
     if (msg.type === "tag_telemetry") {
       processTelemetry(msg as TelemetryPacket)
     }
@@ -60,7 +66,9 @@ simulatorWS.on("message", (raw: WebSocket.RawData) => {
 
 simulatorWS.on("error", e => console.error("Simulator error", e))
 
-// man down loop
+// ----------------------------
+// MAN-DOWN CHECK
+// ----------------------------
 initManDown(broadcast)
 setInterval(checkManDown, 1000)
 
