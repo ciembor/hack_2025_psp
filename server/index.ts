@@ -5,34 +5,52 @@ import WebSocket, { WebSocketServer } from "ws"
 import router from "./routes"
 import type { TelemetryPacket, Alert } from "../shared/schema"
 
+import {
+  initManDown,
+  processTelemetry,
+  checkManDown
+} from "./manDownMonitor"
+
 const app = express()
 app.use(cors())
 app.use(express.json())
-
 app.use("/", router)
 
-
 const server = http.createServer(app)
-const wss = new WebSocketServer({ server })
+
+// JEDEN JEDYNY WebSocket serwer
+const wss = new WebSocketServer({ server, path: "/ws" })
 
 const clients = new Set<WebSocket>()
 
-const simulatorWS = new WebSocket("wss://niesmiertelnik.replit.app/ws")
-
-simulatorWS.on("open", () => {
-  console.log("✓ Simulator WS connected")
+wss.on("connection", ws => {
+  console.log("CLIENT CONNECTED")
+  clients.add(ws)
+  ws.on("close", () => clients.delete(ws))
 })
 
-simulatorWS.on("message", (data: WebSocket.RawData) => {
+// forward broadcast
+function broadcast(data: any) {
+  const json = JSON.stringify(data)
+  for (const c of clients) {
+    try { c.send(json) } catch {}
+  }
+}
+
+// WebSocket to simulator
+const simulatorWS = new WebSocket("wss://niesmiertelnik.replit.app/ws")
+
+simulatorWS.on("open", () => console.log("✓ Simulator WS connected"))
+
+simulatorWS.on("message", (raw: WebSocket.RawData) => {
   try {
-    const msg = JSON.parse(data.toString())
+    const msg = JSON.parse(raw.toString())
+
+    // always forward EVERYTHING
+    broadcast(msg)
 
     if (msg.type === "tag_telemetry") {
-      broadcast(msg as TelemetryPacket)
-    }
-
-    if (msg.type === "alert") {
-      broadcast(msg as Alert)
+      processTelemetry(msg as TelemetryPacket)
     }
 
   } catch (e) {
@@ -40,25 +58,12 @@ simulatorWS.on("message", (data: WebSocket.RawData) => {
   }
 })
 
-simulatorWS.on("error", err => {
-  console.error("Simulator WS error", err)
-})
+simulatorWS.on("error", e => console.error("Simulator error", e))
 
-function broadcast(data: any) {
-  const json = JSON.stringify(data)
-  for (const client of clients) {
-    try {
-      client.send(json)
-    } catch {}
-  }
-}
+// man down loop
+initManDown(broadcast)
+setInterval(checkManDown, 1000)
 
-wss.on("connection", ws => {
-  clients.add(ws)
-  ws.on("close", () => clients.delete(ws))
-})
-
-const PORT = 5001
-server.listen(PORT, () => {
-  console.log(`Backend running at http://localhost:${PORT}`)
+server.listen(5001, () => {
+  console.log("Backend running at http://localhost:5001")
 })
